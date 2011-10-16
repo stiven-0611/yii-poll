@@ -18,56 +18,56 @@
  */
 class PollVote extends CActiveRecord
 {
-	/**
-	 * Returns the static model of the specified AR class.
-	 * @return PollVote the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
+  /**
+   * Returns the static model of the specified AR class.
+   * @return PollVote the static model class
+   */
+  public static function model($className=__CLASS__)
+  {
+    return parent::model($className);
+  }
 
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return '{{poll_vote}}';
-	}
+  /**
+   * @return string the associated database table name
+   */
+  public function tableName()
+  {
+    return '{{poll_vote}}';
+  }
 
-	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		return array(
-			array('choice_id, poll_id', 'required'),
-			array('choice_id, poll_id, user_id, timestamp', 'length', 'max'=>11),
-			array('ip_address', 'length', 'max'=>16),
-		);
-	}
+  /**
+   * @return array validation rules for model attributes.
+   */
+  public function rules()
+  {
+    return array(
+      array('choice_id, poll_id', 'required'),
+      array('choice_id, poll_id, user_id, timestamp', 'length', 'max'=>11),
+      array('ip_address', 'length', 'max'=>16),
+    );
+  }
 
-	/**
-	 * @return array relational rules.
-	 */
-	public function relations()
-	{
-		return array(
-			'user' => array(self::BELONGS_TO, 'User', 'user_id'),
-			'choice' => array(self::BELONGS_TO, 'PollChoice', 'choice_id'),
-			'poll' => array(self::BELONGS_TO, 'Poll', 'poll_id'),
-		);
-	}
+  /**
+   * @return array relational rules.
+   */
+  public function relations()
+  {
+    return array(
+      'user' => array(self::BELONGS_TO, 'User', 'user_id'),
+      'choice' => array(self::BELONGS_TO, 'PollChoice', 'choice_id'),
+      'poll' => array(self::BELONGS_TO, 'Poll', 'poll_id'),
+    );
+  }
 
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return array(
-			'choice_id' => 'Choice',
-		);
-	}
+  /**
+   * @return array customized attribute labels (name=>label)
+   */
+  public function attributeLabels()
+  {
+    return array(
+      'choice_id' => 'Choice',
+    );
+  }
 
   /**
    * Before a PollVote is saved.

@@ -1,15 +1,15 @@
 <?php
 $this->breadcrumbs=array(
-	'Polls'=>array('index'),
-	$model->title=>array('view','id'=>$model->id),
-	'Update',
+  'Polls'=>array('index'),
+  $model->title=>array('view','id'=>$model->id),
+  'Update',
 );
 
 $this->menu=array(
-	array('label'=>'List Polls', 'url'=>array('index')),
-	array('label'=>'Create Poll', 'url'=>array('create')),
-	array('label'=>'View Poll', 'url'=>array('view', 'id'=>$model->id)),
-	array('label'=>'Manage Polls', 'url'=>array('admin')),
+  array('label'=>'List Polls', 'url'=>array('index')),
+  array('label'=>'Create Poll', 'url'=>array('create')),
+  array('label'=>'View Poll', 'url'=>array('view', 'id'=>$model->id)),
+  array('label'=>'Manage Polls', 'url'=>array('admin')),
 );
 ?>
 

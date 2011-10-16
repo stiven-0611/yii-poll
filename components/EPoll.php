@@ -108,12 +108,12 @@ class EPoll extends CPortlet
   }
 
 
-	/**
-	 * Returns the PollChoice model based on primary key or a new PollChoice instance.
-	 * @param integer the ID of the PollChoice to be loaded
-	 */
-	public function loadChoice($choice_id)
-	{
+  /**
+   * Returns the PollChoice model based on primary key or a new PollChoice instance.
+   * @param integer the ID of the PollChoice to be loaded
+   */
+  public function loadChoice($choice_id)
+  {
     if ($choice_id) {
       foreach ($this->_poll->choices as $choice) {
         if ($choice->id == $choice_id) return $choice;
@@ -124,11 +124,11 @@ class EPoll extends CPortlet
   }
 
 
-	/**
-	 * Returns the PollVote model based on primary key or a new PollVote instance.
-	 */
-	public function loadVote()
-	{
+  /**
+   * Returns the PollVote model based on primary key or a new PollVote instance.
+   */
+  public function loadVote()
+  {
     $model = $this->_poll;
     $userId = (int) Yii::app()->user->id;
     $isGuest = Yii::app()->user->isGuest;

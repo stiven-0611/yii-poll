@@ -63,18 +63,18 @@
 
 class PollModule extends CWebModule
 {
-	public $defaultController = 'poll';
+  public $defaultController = 'poll';
 
-	public function init()
-	{
-		$this->setImport(array(
-			'poll.components.*',
-			'poll.models.*',
-		));
+  public function init()
+  {
+    $this->setImport(array(
+      'poll.components.*',
+      'poll.models.*',
+    ));
 
     $assetsFolder = Yii::app()->assetManager->publish(
       Yii::getPathOfAlias('application.modules.poll.assets')
     );
     Yii::app()->clientScript->registerCssFile($assetsFolder .'/poll.css');
-	}
+  }
 }

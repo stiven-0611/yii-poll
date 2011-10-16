@@ -1,11 +1,11 @@
 <div class="form">
 
 <?php $form=$this->beginWidget('CActiveForm', array(
-	'id'=>'poll-form',
-	'enableAjaxValidation'=>false,
+  'id'=>'poll-form',
+  'enableAjaxValidation'=>false,
 )); ?>
 
-	<?php echo $form->errorSummary($model); ?>
+  <?php echo $form->errorSummary($model); ?>
 
   <div class="row">
     <?php echo $form->labelEx($vote,'choice_id'); ?>
@@ -14,9 +14,9 @@
     <?php echo $form->error($vote,'choice_id'); ?>
   </div>
 
-	<div class="row buttons">
-		<?php echo CHtml::submitButton('Vote'); ?>
-	</div>
+  <div class="row buttons">
+    <?php echo CHtml::submitButton('Vote'); ?>
+  </div>
 
 <?php $this->endWidget(); ?>
 
