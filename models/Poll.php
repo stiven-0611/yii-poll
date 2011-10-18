@@ -26,37 +26,6 @@ class Poll extends CActiveRecord
   const STATUS_OPEN = 1;
 
   /**
-   * @var array poll settings
-   */
-  public static $settings = NULL;
-
-  /**
-   * @var array default poll settings
-   */
-  private $_defaultSettings = array(
-    'forceVote' => TRUE,
-    'ipRestrict' => TRUE,
-    'allowGuestCancel' => FALSE,
-  );
-
-  /**
-   * Initializes the model.
-   */
-  public function init()
-  {
-    // Populate the poll's settings
-    if ($this::$settings === NULL) {
-      $this::$settings = $this->_defaultSettings;
-
-      if (is_array(Yii::app()->params['poll'])) {
-        foreach (Yii::app()->params['poll'] as $key => $val) {
-          $this::$settings[$key] = $val;
-        }
-      }
-    }
-  }
-
-  /**
    * Returns the static model of the specified AR class.
    * @return Poll the static model class
    */
@@ -106,13 +75,13 @@ class Poll extends CActiveRecord
   {
     return array(
       'open'=>array(
-        'condition'=>'t.status='. self::STATUS_OPEN,
+        'condition'=>'status='. self::STATUS_OPEN,
        ),  
       'closed'=>array(
-        'condition'=>'t.status='. self::STATUS_CLOSED,
+        'condition'=>'status='. self::STATUS_CLOSED,
        ),  
        'latest'=>array(
-        'order'=>'t.id DESC',
+        'order'=>'id DESC',
        ),  
     );  
   }
@@ -184,7 +153,7 @@ class Poll extends CActiveRecord
     $params = array(':poll_id' => $this->id, ':user_id' => (int) Yii::app()->user->id);
 
     // Add IP restricted attributes if needed
-    if ($this::$settings['ipRestrict'] === TRUE && Yii::app()->user->isGuest) {
+    if (Yii::app()->getModule('poll')->ipRestrict === TRUE && Yii::app()->user->isGuest) {
       $where[] = 'ip_address=:ip_address';
       $params[':ip_address'] = $_SERVER['REMOTE_ADDR'];
     }
@@ -210,8 +179,9 @@ class Poll extends CActiveRecord
       return FALSE;
     }
 
+    $module = Yii::app()->getModule('poll');
     $isGuest = Yii::app()->user->isGuest;
-    $guestsCanCancel = $this::$settings['ipRestrict'] && $this::$settings['allowGuestCancel'];
+    $guestsCanCancel = $module->ipRestrict && $module->allowGuestCancel;
 
     if (!$isGuest || ($isGuest && $guestsCanCancel)) {
       return TRUE;

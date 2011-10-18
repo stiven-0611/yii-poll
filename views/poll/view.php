@@ -15,6 +15,10 @@ $this->menu=array(
 
 <h1><?php echo CHtml::encode($model->title); ?></h1>
 
+<?php if ($model->description): ?>
+<p class="description"><?php echo CHtml::encode($model->description); ?></p>
+<?php endif; ?>
+
 <?php $this->renderPartial('_results', array('model' => $model)); ?>
 
 <?php if ($userVote->id): ?>

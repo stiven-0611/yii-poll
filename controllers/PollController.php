@@ -48,7 +48,7 @@ class PollController extends Controller
   {
     $model = $this->loadModel($id);
 
-    if ($model::$settings['forceVote'] && $model->userCanVote()) {
+    if (Yii::app()->getModule('poll')->forceVote && $model->userCanVote()) {
       $this->redirect(array('vote', 'id' => $model->id)); 
     }
     else {
@@ -263,7 +263,7 @@ class PollController extends Controller
 
     foreach ($model->votes as $vote) {
       if ($vote->user_id == $userId) {
-        if ($model::$settings['ipRestrict'] && $isGuest && $vote->ip_address != $_SERVER['REMOTE_ADDR'])
+        if (Yii::app()->getModule('poll')->ipRestrict && $isGuest && $vote->ip_address != $_SERVER['REMOTE_ADDR'])
           continue;
         else
           return $vote;

@@ -11,6 +11,7 @@
 
 
 .poll-results {
+  margin-bottom: .5em;
   overflow: hidden;
 }
 .poll-results .label {

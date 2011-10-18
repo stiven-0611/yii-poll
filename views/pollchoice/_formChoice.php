@@ -27,8 +27,6 @@
     }
     // Add additional hidden fields
     echo CHtml::activeHiddenField($choice,"[$id]id");
-    // Add backup ID to allow AJAX validation on new items
-    if (!isset($choice->id)) echo CHtml::hiddenField('PollChoice['. $id .'][_id]', $id);
   ?>
   </td>
 </tr>

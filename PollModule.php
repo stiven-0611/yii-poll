@@ -28,9 +28,6 @@
  *      'application.modules.poll.components.*',
  *    ),
  *    'modules' => array(
- *      'poll',
- *    ),
- *    'params'=>array(
  *      'poll' => array(
  *        // Force users to vote before seeing results
  *        'forceVote' => TRUE,
@@ -64,6 +61,24 @@
 class PollModule extends CWebModule
 {
   public $defaultController = 'poll';
+
+  /**
+   * @property boolean Force users to vote before seeing results.
+   */
+  public $forceVote = TRUE;
+
+  /**
+   * @property boolean Restrict anonymous votes by IP address,
+   * otherwise it's tied only to the user's ID.
+   */
+  public $ipRestrict = TRUE;
+
+  /**
+   * @property boolean Allow guests to cancel their votes
+   * if $ipRestrict is enabled.
+   */
+  public $allowGuestCancel = FALSE;
+
 
   public function init()
   {

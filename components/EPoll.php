@@ -80,7 +80,7 @@ class EPoll extends CPortlet
       }
 
       // Force user to vote if needed
-      if ($model::$settings['forceVote'] && $model->userCanVote()) {
+      if (Yii::app()->getModule('poll')->forceVote && $model->userCanVote()) {
         $view = 'vote';
 
         // Convert choices to form options list
@@ -135,7 +135,7 @@ class EPoll extends CPortlet
 
     foreach ($model->votes as $vote) {
       if ($vote->user_id == $userId) {
-        if ($model::$settings['ipRestrict'] && $isGuest && $vote->ip_address != $_SERVER['REMOTE_ADDR'])
+        if (Yii::app()->getModule('poll')->ipRestrict && $isGuest && $vote->ip_address != $_SERVER['REMOTE_ADDR'])
           continue;
         else
           return $vote;
