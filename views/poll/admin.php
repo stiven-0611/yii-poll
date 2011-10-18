@@ -46,7 +46,7 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
     'description',
     array(
       'name' => 'status',
-      'value' => 'CHtml::encode(($data->getStatusLabel($data->status))',
+      'value' => 'CHtml::encode($data->getStatusLabel($data->status))',
       'filter' => CHtml::activeDropDownList($model, 'status', $model->statusLabels()),
     ),
     array(

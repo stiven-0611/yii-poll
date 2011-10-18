@@ -1,6 +1,6 @@
 <?php
 
-class PollVoteController extends Controller
+class PollvoteController extends Controller
 {
   /**
    * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
