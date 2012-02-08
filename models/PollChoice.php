@@ -72,7 +72,7 @@ class PollChoice extends CActiveRecord
    */
   public function getWeights()
   {
-    $weights = array(-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5);
+    $weights = range(-5, 5);
 
     return array_combine($weights, $weights);
   }

@@ -68,7 +68,7 @@
 </div><!-- form -->
 
 <?php
-$callback = $this->createUrl('pollchoice/ajaxcreate');
+$callback = Yii::app()->createUrl('/poll/pollchoice/ajaxcreate');
 $js = <<<JS
 var PollChoice = function(o) {
   this.target = o;

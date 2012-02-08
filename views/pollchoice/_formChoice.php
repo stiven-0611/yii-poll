@@ -16,7 +16,7 @@
       // Add AJAX delete link
       echo CHtml::ajaxLink(
         'Delete',
-        array('pollchoice/delete', 'id' => $choice->id, 'ajax' => TRUE),
+        array('/poll/pollchoice/delete', 'id' => $choice->id, 'ajax' => TRUE),
         array('type' => 'POST', 'success' => 'js:function(){'. $deleteJs .'}'),
         array('confirm' => 'Are you sure you want to delete this item?')
       );
