@@ -76,8 +76,9 @@ class EPoll extends CPortlet
         $userVote->choice_id = $_POST['PortletPollVote_choice_id'];
         $userVote->poll_id = $model->id;
         if ($userVote->save()) {
-          // Prevent duplicate submission on refresh
-          Yii::app()->controller->redirect(Yii::app()->controller->route);
+          // Prevent submit on refresh
+          $route = Yii::app()->controller->route;
+          Yii::app()->controller->redirect(Yii::app()->createUrl($route));
         }
       }
 

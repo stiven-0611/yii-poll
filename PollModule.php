@@ -5,7 +5,7 @@
  *
  * @author Matt Kelliher
  * @license New BSD License
- * @version 0.9.2
+ * @version 0.9.2b
  */
 
 /**
