@@ -18,7 +18,6 @@ CREATE TABLE `poll_choice` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `poll_id` int(11) unsigned NOT NULL,
   `label` varchar(255) NOT NULL DEFAULT '',
-  `votes` int(11) unsigned NOT NULL DEFAULT '0',
   `weight` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `choice_poll` (`poll_id`),

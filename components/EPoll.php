@@ -2,6 +2,9 @@
 
 Yii::import('zii.widgets.CPortlet');
 
+/**
+ * EPoll portlet class file.
+ */
 class EPoll extends CPortlet
 {
   /**
@@ -9,17 +12,14 @@ class EPoll extends CPortlet
    * Defaults to 0, which loads the latest poll
    */
   public $poll_id = 0;
-
   /**
    * @var integer the counter for generating implicit IDs.
    */
   private static $_pollCounter = 0;
-
   /**
    * @var string id of the widget.
    */
   private $_id;
-
   /**
    * @var Poll
    */
@@ -38,12 +38,13 @@ class EPoll extends CPortlet
       return $this->_id = 'Poll_'. self::$_pollCounter++;
   }
 
-
   /**
    * Initializes the portlet.
    */
   public function init()
   {
+    $this->attachBehavior('poll', 'poll.behaviors.PollBehavior');
+
     $assets = Yii::app()->assetManager->publish(dirname(__FILE__) . DIRECTORY_SEPARATOR . '../assets');
     $clientScript = Yii::app()->clientScript;
     $clientScript->registerCssFile($assets .'/poll.css');
@@ -59,7 +60,6 @@ class EPoll extends CPortlet
     parent::init();
   }
 
-  
   /**
    * Renders the portlet content.
    */
@@ -68,7 +68,7 @@ class EPoll extends CPortlet
     $model = $this->_poll;
 
     if ($model) {
-      $userVote = $this->loadVote();
+      $userVote = $this->loadVote($model);
       $params = array('model' => $model, 'userVote' => $userVote);
 
       // Save a user's vote
@@ -97,7 +97,7 @@ class EPoll extends CPortlet
       // Otherwise view the results
       else {
         $view = 'view';
-        $userChoice = $this->loadChoice($userVote->choice_id);
+        $userChoice = $this->loadChoice($model, $userVote->choice_id);
 
         $params += array(
           'userVote' => $userVote,
@@ -108,44 +108,6 @@ class EPoll extends CPortlet
 
       $this->render($view, $params);
     }
-  }
-
-
-  /**
-   * Returns the PollChoice model based on primary key or a new PollChoice instance.
-   * @param integer the ID of the PollChoice to be loaded
-   */
-  public function loadChoice($choice_id)
-  {
-    if ($choice_id) {
-      foreach ($this->_poll->choices as $choice) {
-        if ($choice->id == $choice_id) return $choice;
-      }
-    }
-
-    return new PollChoice;
-  }
-
-
-  /**
-   * Returns the PollVote model based on primary key or a new PollVote instance.
-   */
-  public function loadVote()
-  {
-    $model = $this->_poll;
-    $userId = (int) Yii::app()->user->id;
-    $isGuest = Yii::app()->user->isGuest;
-
-    foreach ($model->votes as $vote) {
-      if ($vote->user_id == $userId) {
-        if (Yii::app()->getModule('poll')->ipRestrict && $isGuest && $vote->ip_address != $_SERVER['REMOTE_ADDR'])
-          continue;
-        else
-          return $vote;
-      }
-    }
-
-    return new PollVote;
   }
 
 }

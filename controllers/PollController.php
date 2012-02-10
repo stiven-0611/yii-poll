@@ -1,7 +1,22 @@
 <?php
 
+/**
+ * PollController class file.
+ */
 class PollController extends Controller
 {
+  /**
+   * @return array behaviors
+   */
+  public function behaviors()
+  {
+    return array(
+      'poll' => array(
+        'class' => 'poll.behaviors.PollBehavior',
+      ),
+    );
+  }
+
   /**
    * @return array action filters
    */
@@ -244,47 +259,10 @@ class PollController extends Controller
    */
   public function loadModel($id)
   {
-    $model=Poll::model()->with('choices','votes')->findByPk($id);
+    $model=Poll::model()->with('choices','votes','totalVotes')->findByPk($id);
     if($model===null)
       throw new CHttpException(404,'The requested page does not exist.');
     return $model;
-  }
-
-  /**
-   * Returns the PollChoice model based on primary key or a new PollChoice instance.
-   * @param Poll the Poll model 
-   * @param integer the ID of the PollChoice to be loaded
-   */
-  public function loadChoice($poll, $choice_id)
-  {
-    if ($choice_id) {
-      foreach ($poll->choices as $choice) {
-        if ($choice->id == $choice_id) return $choice;
-      }
-    }
-
-    return new PollChoice;
-  }
-
-  /**
-   * Returns the PollVote model based on primary key or a new PollVote instance.
-   * @param object the Poll model 
-   */
-  public function loadVote($model)
-  {
-    $userId = (int) Yii::app()->user->id;
-    $isGuest = Yii::app()->user->isGuest;
-
-    foreach ($model->votes as $vote) {
-      if ($vote->user_id == $userId) {
-        if (Yii::app()->getModule('poll')->ipRestrict && $isGuest && $vote->ip_address != $_SERVER['REMOTE_ADDR'])
-          continue;
-        else
-          return $vote;
-      }
-    }
-
-    return new PollVote;
   }
 
   /**
@@ -299,4 +277,5 @@ class PollController extends Controller
       Yii::app()->end();
     }
   }
+
 }

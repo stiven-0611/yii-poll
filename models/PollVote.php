@@ -78,31 +78,22 @@ class PollVote extends CActiveRecord
     $this->timestamp = time();
     $this->user_id = Yii::app()->user->id;
 
-    // Relation may not exist yet so find it normally
-    $choice = PollChoice::model()->findByPk($this->choice_id);
-    if ($choice) {
-      $choice->votes += 1;
-      $choice->save();
-    }
-    else {
-      return FALSE;
-    }
-
     return parent::beforeSave(); 
   }
 
   /**
-   * After a PollVote is deleted.
+   * After a PollVote is saved.
    */
-  public function afterDelete()
+  public function afterSave()
   {
-    $this->choice->votes -= 1;
-    $this->choice->save();
-
-    parent::afterDelete();
+    if (Yii::app()->getModule('poll')->guestCookies === TRUE && Yii::app()->user->isGuest) {
+      $cookieName = 'Poll_'. $this->poll->id;
+      $cookie = new CHttpCookie($cookieName, $this->id);
+      $cookie->expire = time() + 60 * 60 * 24 * 365;
+      Yii::app()->request->cookies[$cookieName] = $cookie;
+    }
   }
 
-  
   /**
    * Before a PollVote is deleted.
    */
@@ -111,6 +102,11 @@ class PollVote extends CActiveRecord
     if (!$this->poll->userCanCancelVote($this)) {
       return FALSE;
     }
+
+    // Delete cookie if needed
+    if (isset(Yii::app()->request->cookies['Poll_'. $this->poll->id]))
+      unset(Yii::app()->request->cookies['Poll_'. $this->poll->id]);
+
     return parent::beforeDelete();
   }
 

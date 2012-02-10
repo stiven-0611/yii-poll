@@ -7,12 +7,12 @@
  * @property string $id
  * @property string $poll_id
  * @property string $label
- * @property string $votes
  * @property integer $weight
  *
  * The followings are the available model relations:
  * @property Poll $poll
- * @property PollVote[] $pollVotes
+ * @property PollVote[] $votes
+ * @property integer $totalVotes
  */
 class PollChoice extends CActiveRecord
 {
@@ -41,7 +41,7 @@ class PollChoice extends CActiveRecord
     return array(
       array('poll_id, label', 'required'),
       array('weight', 'numerical', 'integerOnly'=>true),
-      array('poll_id, votes', 'length', 'max'=>11),
+      array('poll_id', 'length', 'max'=>11),
       array('label', 'length', 'max'=>255),
     );
   }
@@ -53,7 +53,8 @@ class PollChoice extends CActiveRecord
   {
     return array(
       'poll' => array(self::BELONGS_TO, 'Poll', 'poll_id'),
-      'pollVotes' => array(self::HAS_MANY, 'PollVote', 'choice_id'),
+      'votes' => array(self::HAS_MANY, 'PollVote', 'choice_id'),
+      'totalVotes' => array(self::STAT, 'PollVote', 'choice_id'),
     );
   }
 
@@ -64,6 +65,7 @@ class PollChoice extends CActiveRecord
   {
     return array(
       'order' => 'weight ASC, label ASC',
+      'with' => array('totalVotes'),
     );
   }
 

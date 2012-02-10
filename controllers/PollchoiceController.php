@@ -80,7 +80,7 @@ class PollchoiceController extends Controller
    */
   public function loadModel($id)
   {
-    $model=PollChoice::model()->with('pollVotes')->findByPk($id);
+    $model=PollChoice::model()->with('votes', 'totalVotes')->findByPk($id);
     if($model===null)
       throw new CHttpException(404,'The requested page does not exist.');
     return $model;

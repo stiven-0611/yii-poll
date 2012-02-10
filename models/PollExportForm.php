@@ -235,8 +235,8 @@ class PollExportForm extends CFormModel
             $rows[] = array(
               // Add quotes for Text Delimited formats
               $this->t('Choice') => $this->format == 'json' ? $choice->label : '"'. $choice->label .'"',
-              $this->t('Votes') => $choice->votes,
-              $this->t('Percentage') => $this->_totalVotes > 0 ? 100 * round($choice->votes / $this->_totalVotes, 3) : 0,
+              $this->t('Votes') => $choice->totalVotes,
+              $this->t('Percentage') => $this->_totalVotes > 0 ? 100 * round($choice->totalVotes / $this->_totalVotes, 3) : 0,
             );
           }
         }

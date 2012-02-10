@@ -5,12 +5,12 @@
  *
  * @author Matt Kelliher
  * @license New BSD License
- * @version 0.9.2b
+ * @version 0.9.3
  */
 
 /**
  * The Poll extension allows you to create polls for users to vote on.
- * Votes can be restricted by user ID, as well as by IP address.
+ * Votes can be restricted by user ID, cookie, and/or IP address.
  *
  * Installation:
  *   In order for this to work properly, you must have a User class
@@ -31,11 +31,13 @@
  *      'poll' => array(
  *        // Force users to vote before seeing results
  *        'forceVote' => TRUE,
+ *        // Track anonymous votes with cookies
+ *        'guestCookies' => TRUE,
  *        // Restrict anonymous votes by IP address,
  *        // otherwise it's tied only to user_id 
- *        'ipRestrict' => TRUE,
+ *        'ipRestrict' => FALSE,
  *        // Allow guests to cancel their votes
- *        // if ipRestrict is enabled
+ *        // if ipRestrict or guestCookies are enabled.
  *        'allowGuestCancel' => FALSE,
  *      ),
  *    ),
@@ -68,10 +70,15 @@ class PollModule extends CWebModule
   public $forceVote = TRUE;
 
   /**
+   * @property boolean Track anonymous votes with cookies.
+   */
+  public $guestCookies = TRUE;
+
+  /**
    * @property boolean Restrict anonymous votes by IP address,
    * otherwise it's tied only to the user's ID.
    */
-  public $ipRestrict = TRUE;
+  public $ipRestrict = FALSE;
 
   /**
    * @property boolean Allow guests to cancel their votes
@@ -90,6 +97,7 @@ class PollModule extends CWebModule
     $assetsFolder = Yii::app()->assetManager->publish(
       Yii::getPathOfAlias('application.modules.poll.assets')
     );
+
     Yii::app()->clientScript->registerCssFile($assetsFolder .'/poll.css');
   }
 }

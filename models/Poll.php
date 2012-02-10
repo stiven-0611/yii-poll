@@ -12,6 +12,7 @@
  * The followings are the available model relations:
  * @property PollChoice[] $choices
  * @property PollVote[] $votes
+ * @property integer $totalVotes
  */
 class Poll extends CActiveRecord
 {
@@ -64,7 +65,7 @@ class Poll extends CActiveRecord
     return array(
       'choices' => array(self::HAS_MANY, 'PollChoice', 'poll_id'),
       'votes' => array(self::HAS_MANY, 'PollVote', 'poll_id'),
-      'totalVotes' => array(self::STAT, 'PollChoice', 'poll_id', 'select' => 'SUM(votes)'),
+      'totalVotes' => array(self::STAT, 'PollVote', 'poll_id'),
     );
   }
 
@@ -152,10 +153,23 @@ class Poll extends CActiveRecord
     $where = array('and', 'poll_id=:poll_id', 'user_id=:user_id');
     $params = array(':poll_id' => $this->id, ':user_id' => (int) Yii::app()->user->id);
 
-    // Add IP restricted attributes if needed
-    if (Yii::app()->getModule('poll')->ipRestrict === TRUE && Yii::app()->user->isGuest) {
-      $where[] = 'ip_address=:ip_address';
-      $params[':ip_address'] = $_SERVER['REMOTE_ADDR'];
+    if (Yii::app()->user->isGuest) {
+      $module = Yii::app()->getModule('poll');
+
+      // Check for choice cookie
+      if ($module->guestCookies === TRUE && isset(Yii::app()->request->cookies['Poll_'. $this->id])) {
+        return FALSE;
+      }
+
+      // Add IP restricted attributes if needed
+      if ($module->ipRestrict === TRUE) {
+        $where[] = 'ip_address=:ip_address';
+        $params[':ip_address'] = $_SERVER['REMOTE_ADDR'];
+      }
+      else {
+        // No cookie and no IP restriction, so go for it
+        return TRUE;
+      }
     }
 
     // Retrieve true/false if a vote exists on poll by user
@@ -181,9 +195,10 @@ class Poll extends CActiveRecord
 
     $module = Yii::app()->getModule('poll');
     $isGuest = Yii::app()->user->isGuest;
-    $guestsCanCancel = $module->ipRestrict && $module->allowGuestCancel;
+    $hasCookie = $isGuest && $module->guestCookies && isset(Yii::app()->request->cookies['Poll_'. $this->id]);
+    $guestCanCancel = $isGuest && $module->allowGuestCancel && ($module->ipRestrict || $hasCookie);
 
-    if (!$isGuest || ($isGuest && $guestsCanCancel)) {
+    if (!$isGuest || ($guestCanCancel)) {
       return TRUE;
     }
 
