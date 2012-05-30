@@ -29,16 +29,3 @@
 .poll-results .totals {
   text-align: right;
 }
-
-
-.poll-item {
-  position: relative;
-}
-.poll-item .poll-id {
-  color: #dedede;
-  font-size: 24px;
-  font-weight: bold;
-  position: absolute;
-  right: 5px;
-  top: 5px;
-}

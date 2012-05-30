@@ -76,7 +76,7 @@ class PollVote extends CActiveRecord
   {
     $this->ip_address = $_SERVER['REMOTE_ADDR'];
     $this->timestamp = time();
-    $this->user_id = Yii::app()->user->id;
+    $this->user_id = (int) Yii::app()->user->id;
 
     return parent::beforeSave(); 
   }

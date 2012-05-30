@@ -21,9 +21,13 @@ class EPoll extends CPortlet
    */
   private $_id;
   /**
-   * @var Poll
+   * @var Poll the poll this widget represents.
    */
   private $_poll;
+  /**
+   * @var PollModule shortcut to the poll module.
+   */
+  private $_module;
 
   /**
    * Returns the ID of the widget or generates a new one if requested.
@@ -43,15 +47,13 @@ class EPoll extends CPortlet
    */
   public function init()
   {
-    $this->attachBehavior('poll', 'poll.behaviors.PollBehavior');
-
-    $assets = Yii::app()->assetManager->publish(dirname(__FILE__) . DIRECTORY_SEPARATOR . '../assets');
-    $clientScript = Yii::app()->clientScript;
-    $clientScript->registerCssFile($assets .'/poll.css');
+    // Set the poll module (also kicks in the CSS via the module init)
+    $this->_module = Yii::app()->getModule('poll');
+    $this->attachBehavior('pollBehavior', 'poll.behaviors.PollBehavior');
 
     $this->_poll = $this->poll_id == 0 
-      ? Poll::model()->latest()->find()
-      : Poll::model()->findByPk($this->poll_id);
+      ? Poll::model()->with('choices','votes','totalVotes')->latest()->find()
+      : Poll::model()->with('choices','votes','totalVotes')->findByPk($this->poll_id);
 
     if ($this->_poll) {
       $this->title = $this->_poll->title;
@@ -83,7 +85,7 @@ class EPoll extends CPortlet
       }
 
       // Force user to vote if needed
-      if (Yii::app()->getModule('poll')->forceVote && $model->userCanVote()) {
+      if ($this->_module->forceVote && $model->userCanVote()) {
         $view = 'vote';
 
         // Convert choices to form options list
@@ -100,7 +102,6 @@ class EPoll extends CPortlet
         $userChoice = $this->loadChoice($model, $userVote->choice_id);
 
         $params += array(
-          'userVote' => $userVote,
           'userChoice' => $userChoice,
           'userCanCancel' => $model->userCanCancelVote($userVote),
         );
