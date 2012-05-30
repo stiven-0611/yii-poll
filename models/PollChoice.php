@@ -63,8 +63,11 @@ class PollChoice extends CActiveRecord
    */
   public function defaultScope()
   {
+    $t = $this->tableName();
+
     return array(
-      'order' => 'weight ASC, label ASC',
+      'alias' => $t,
+      'order' => "$t.weight ASC, $t.label ASC",
       'with' => array('totalVotes'),
     );
   }

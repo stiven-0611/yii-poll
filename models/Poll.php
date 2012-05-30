@@ -69,21 +69,38 @@ class Poll extends CActiveRecord
     );
   }
 
+  /**
+   * @return array default scope.
+   */
+  public function defaultScope()
+  {
+    $t = $this->tableName();
+
+    return array(
+      'alias' => $t,
+    );
+  }
+
   /** 
    * @return array additional query scopes
    */
   public function scopes()
   {
+    $t = $this->tableName();
+
     return array(
-      'open'=>array(
-        'condition'=>'status='. self::STATUS_OPEN,
+      'open' => array(
+        'alias' => $t,
+        'condition' => "$t.status=". self::STATUS_OPEN,
        ),  
-      'closed'=>array(
-        'condition'=>'status='. self::STATUS_CLOSED,
+      'closed' => array(
+        'alias' => $t,
+        'condition' => "$t.status=". self::STATUS_CLOSED,
        ),  
-       'latest'=>array(
-        'order'=>'id DESC',
-       ),  
+      'latest' => array(
+        'alias' => $t,
+        'order' => "$t.id DESC",
+      ),  
     );  
   }
 
